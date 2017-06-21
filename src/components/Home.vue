@@ -2,31 +2,9 @@
   <div>
     <img src="../assets/logo.png" id="logo-cover">
     <img src="../assets/cover.png" id="banner">
-    <h4 class="beige p">Vi i Førde Tennisklubb har jobba i over seks år for å kunne bygge ei flunkande ny tennisbane i Førde.
-      No treng vi berre 100 000 kroner for å sette i gong med bygginga.
-      Så bli med og støtt Noregs første folkefinansierte tennisbane!</h4>
+    <h4 class="beige p">Dette er heimstaden til Protolab Vest. Sogn og Fjordane Makerspace</h4>
 
-    <h4 class="beige p">Kampanjen sluttar om <span class="bold-underscore">29 dagar!</span></h4>
-    <img src="../assets/spacer.png" id="spacer">
-    <div class="small-container beige-bg">
-      <img src="../assets/vipps_logo.png" id="vipps1">
-      <h2 class="bold blue">
-        Støtt oss med vipps eller nettbank
-      </h2>
-      <h4 class="blue p padding-top-bottom">
-        Vil du være med å folkefinansiere Tennisbane i Førde så kan du sende ønskeleg beløp på Vipps eller Nettbank.
-      </h4>
-      <h4 class="blue bold">Vipps nummer:</h4>
-      <h2 class="blue bold borderbox">17722</h2>
-      <div><img src="../assets/vipps1.jpg" id="vipps2"></div>
-      <h4 class="blue p-center padding-top-bottom">(Kontonummer: <span class="bold-underscore"> 15037510944</span>)</h4>
-      <h4 class="blue p">PS: Hugs å merk donasjonen med navn slik at vi enkelt kan ta kontakt dersom det blir nødvendig. Dersom prosjektet skulle skjære seg eller prosjektet ikkje er påbegynt innan to år så vil du bli refundert fullt beløp.</h4>
-    </div>
-    <img src="../assets/spacer.png" id="spacer">
-    <h3 class="beige bold">Om folkefinansiering</h3>
-    <img src="../assets/spacer.png" id="spacer">
-    <img src="../assets/racket.png" id="racket">
-    <h3 class="beige bold">Slik fungerar kampanjen</h3>
+
   </div>
 </template>
 
