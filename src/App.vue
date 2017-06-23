@@ -85,6 +85,23 @@
         </div>
       </div>
       <div v-else>&hellip;</div>
+      <h3>Subscribe</h3>
+      <div>
+        <label>
+          Card
+          <select v-model="newCharge.source">
+            <option :value="null">Default payment method</option>
+            <option v-for="(source, id) in sources" v-bind:value="source.id" v-if="source.id">
+              {{ source.brand }} &hellip;{{ source.last4 }}
+              (exp. {{ source.exp_month }}/{{ source.exp_year }})
+            </option>
+          </select>
+        </label>
+      </div>
+      <div>
+        <button v-on:click="submitNewCharge">Subscribe</button>
+        {{ newCharge.error }}
+      </div>
     </div>
     <nav class=container id="navigation">
       <ul class="nav nav-tabs">
@@ -205,6 +222,11 @@ export default {
         source: this.newCharge.source,
         amount: parseInt(this.newCharge.amount)
       });
+    },
+    submitNewSubscription: function() {
+      firebase.database().ref(`/stripe_customers/${this.currentUser.uid}/subscriptions`).push({
+        source: this.newCharge.source
+      })
     },
     signOut: function() {
       firebase.auth().signOut()
