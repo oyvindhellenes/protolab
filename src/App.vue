@@ -99,7 +99,7 @@
         </label>
       </div>
       <div>
-        <button v-on:click="submitNewCharge">Subscribe</button>
+        <button v-on:click="submitNewSubscription">Subscribe</button>
         {{ newCharge.error }}
       </div>
     </div>
