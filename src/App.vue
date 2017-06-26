@@ -46,43 +46,6 @@
             {{ newCreditCard.error }}
           </div>
         </div>
-        <h3>Charges</h3>
-        <ul>
-          <li v-for="(charge, id) in charges">
-            {{ charge.amount }}
-            <span v-if="charge.error">
-              {{ charge.error }}
-            </span>
-            <span v-else-if="charge.outcome">
-              {{ charge.outcome.seller_message }}
-              {{ charge.source.brand }} &hellip;{{ charge.source.last4 }}
-              (exp. {{ charge.source.exp_month }}/{{ charge.source.exp_year }})
-            </span>
-            <span v-else>&hellip;</span>
-          </li>
-        </ul>
-        <h4>New</h4>
-        <div>
-          <label>
-            Card
-            <select v-model="newCharge.source">
-              <option :value="null">Default payment method</option>
-              <option v-for="(source, id) in sources" v-bind:value="source.id" v-if="source.id">
-                {{ source.brand }} &hellip;{{ source.last4 }}
-                (exp. {{ source.exp_month }}/{{ source.exp_year }})
-              </option>
-            </select>
-          </label>
-        </div>
-        <div>
-          <label>
-            Amount <input v-model="newCharge.amount">
-          </label>
-        </div>
-        <div>
-          <button v-on:click="submitNewCharge">Charge</button>
-          {{ newCharge.error }}
-        </div>
       </div>
       <div v-else>&hellip;</div>
       <h3>Subscribe</h3>
@@ -100,6 +63,10 @@
       </div>
       <div>
         <button v-on:click="submitNewSubscription">Subscribe</button>
+        {{ newCharge.error }}
+      </div>
+      <div>
+        <button v-on:click="unsubscribe">Unsubscribe</button>
         {{ newCharge.error }}
       </div>
     </div>
@@ -123,6 +90,8 @@
 </template>
 
 <script>
+var request = require('../node_modules/request');
+
 var firebaseUI = new firebaseui.auth.AuthUI(firebase.auth());
 export default {
   name: 'app',
@@ -173,12 +142,10 @@ export default {
         this.currentUser = null;
       }
     });
-    console.log('firebeUI');
   },
   methods: {
     listen: function() {
       firebase.database().ref(`/stripe_customers/${this.currentUser.uid}/customer_id`).on('value', snapshot => {
-        console.log(this.currentUser.uid);
         this.stripeCustomerInitialized = (snapshot.val() !== null);
       }, () => {
         this.stripeCustomerInitialized = false;
@@ -227,6 +194,24 @@ export default {
       firebase.database().ref(`/stripe_customers/${this.currentUser.uid}/subscriptions`).push({
         source: this.newCharge.source
       })
+    },
+    unsubscribe: function() {
+      request('https://us-central1-protolabvest-f8252.cloudfunctions.net/unsubscribeCustomer', function (error, response, body) {
+        console.log('error:', error); // Print the error if one occurred
+        console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
+        console.log('body:', body); // Print the HTML for the Google homepage.
+      });
+      // let userKey = this.currentUser.uid;
+      // firebase.database().ref(`/stripe_customers/${userKey}/subscriptions`).once('value', function(snapshot) {
+      //   snapshot.forEach(function(sub){
+      //     let subscription = sub.val();
+      //     if (!subscription.cancel_at_period_end) {
+      //       $.post( "ajax/test.html", function( data ) {
+      //         $( ".result" ).html( data );
+      //       });
+      //     }
+      //   })
+      // });
     },
     signOut: function() {
       firebase.auth().signOut()
