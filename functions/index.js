@@ -88,21 +88,16 @@ exports.subscribeCustomer = functions.database.ref('/stripe_customers/{userId}/s
 
 exports.unsubscribeCustomer = functions.https.onRequest((req, res) => {
 
-  // let args = {'id': req.id, 'at_period_end': true}
-  // return stripe.subscriptions.del(args, function(err, confirmation){
-  //   if (err) {
-  //     return event.data.adminRef.child('error').set(userFacingMessage(error)).then(() => {
-  //       return reportError(error, {user: event.params.userId});
-  //     });
-  //   } else {
-  //     return event.data.adminRef.set(confirmation);
-  //   }
-  // });
   cors(req, res, () => {
-      res.send("hei");
+    stripe.subscriptions.del(req.body.id, {'at_period_end': true}, function(err, confirmation){
+        if (err) {
+          event.data.adminRef.child('error').set(userFacingMessage(error));
+        } else {
+          event.data.adminRef.set(confirmation);
+        }
+        res.send(confirmation);
+      });
   });
-
-
 });
 
 // When a user is created, register them with Stripe

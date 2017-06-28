@@ -196,22 +196,31 @@ export default {
       })
     },
     unsubscribe: function() {
-      request('https://us-central1-protolabvest-f8252.cloudfunctions.net/unsubscribeCustomer', function (error, response, body) {
-        console.log('error:', error); // Print the error if one occurred
-        console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
-        console.log('body:', body); // Print the HTML for the Google homepage.
+      let userKey = this.currentUser.uid;
+      firebase.database().ref(`/stripe_customers/${userKey}/subscriptions`).once('value', function(snapshot) {
+        snapshot.forEach(function(sub){
+          let subscription = sub.val();
+          let options = {
+            url: 'https://us-central1-protolabvest-f8252.cloudfunctions.net/unsubscribeCustomer',
+            headers: {
+              'Access-Control-Allow-Origin': '*'
+            },
+            form: {
+              id: subscription.id
+            }
+          }
+
+          if (!subscription.cancel_at_period_end) {
+            request.post(options, function (error, response, body) {
+              console.log('error:', error); // Print the error if one occurred
+              console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
+              console.log('body:', body); // Print the HTML for the Google homepage.
+            });
+          } else {
+            console.log("Not cancelled");
+          }
+        })
       });
-      // let userKey = this.currentUser.uid;
-      // firebase.database().ref(`/stripe_customers/${userKey}/subscriptions`).once('value', function(snapshot) {
-      //   snapshot.forEach(function(sub){
-      //     let subscription = sub.val();
-      //     if (!subscription.cancel_at_period_end) {
-      //       $.post( "ajax/test.html", function( data ) {
-      //         $( ".result" ).html( data );
-      //       });
-      //     }
-      //   })
-      // });
     },
     signOut: function() {
       firebase.auth().signOut()

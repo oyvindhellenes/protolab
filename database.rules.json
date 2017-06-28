@@ -17,6 +17,9 @@
             "amount": { ".validate": "newData.isNumber()" },
             "$other": { ".validate": false }
           }
+        },
+        "subscriptions" : {
+          ".write": "$uid === auth.uid"
         }
       }
     }
