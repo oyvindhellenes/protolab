@@ -89,15 +89,24 @@ exports.subscribeCustomer = functions.database.ref('/stripe_customers/{userId}/s
 exports.unsubscribeCustomer = functions.https.onRequest((req, res) => {
 
   cors(req, res, () => {
-    stripe.subscriptions.del(req.body.id, {'at_period_end': true}, function(err, confirmation){
+    console.log(req.body.subKey);
+    console.log(req.body.userId);
+    console.log(req.body.subId);
+    let db = admin.database();
+    let fbRef = db.ref(`/stripe_customers/${req.body.userId}/subscriptions/${req.body.subKey}`);
+
+    stripe.subscriptions.del(req.body.subId, {'at_period_end': true}, function(err, confirmation){
         if (err) {
-          event.data.adminRef.child('error').set(userFacingMessage(error));
+          fbRef.child('error').set(userFacingMessage(error));
+          res.send(error);
         } else {
-          event.data.adminRef.set(confirmation);
+          fbRef.set(confirmation);
+          res.send(confirmation);
         }
-        res.send(confirmation);
       });
   });
+
+
 });
 
 // When a user is created, register them with Stripe
