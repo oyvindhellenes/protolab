@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
     <link href="https://fonts.googleapis.com/css?family=Lilita+One|Lato:300" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/1.0.0/firebaseui.css" />
-    <script src="https://js.stripe.com/v2/"></script>
+    <script src="https://js.stripe.com/v3/"></script>
 
   </head>
   <body>
@@ -24,7 +24,8 @@
         messagingSenderId: "912926385476"
       };
       firebase.initializeApp(config);
-      Stripe.setPublishableKey('pk_test_DhbaltXpWcE22ulgVtP4JGBO');
+      var Stripe = Stripe('pk_test_DhbaltXpWcE22ulgVtP4JGBO');
+
     </script>
 
     <script src="https://cdn.firebase.com/libs/firebaseui/1.0.0/firebaseui.js"></script>

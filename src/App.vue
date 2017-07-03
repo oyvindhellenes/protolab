@@ -6,68 +6,97 @@
     <div v-if="currentUser">
       <h2>Hello {{ currentUser.email }},</h2>
       <button v-on:click="signOut">Sign out</button>
-      <div v-if="stripeCustomerInitialized">
-        <h3>Credit Cards</h3>
-        <ul>
-          <li v-for="(source, id) in sources">
-            <span v-if="source.id">
-              {{ source.brand }} &hellip;{{ source.last4 }}
-              (exp. {{ source.exp_month }}/{{ source.exp_year }})
-            </span>
-            <span v-else>&hellip;</span>
-          </li>
-        </ul>
-        <div>
-          <h4>New</h4>
-          <div>
-            <label>
-              Number <input v-model="newCreditCard.number">
-            </label>
+    <!-- Button trigger modal -->
+    <div v-if="subscription">
+      <button v-on:click="unsubscribe" class="btn btn-primary btn-lg orange-bg">Meld meg ut</button>
+      {{ newCharge.error }}
+    </div>
+    <div v-else>
+      <button type="button" class="btn btn-primary btn-lg orange-bg" data-toggle="modal" data-target="#myModal">
+        Bli medlem!
+      </button>
+    </div>
+
+
+    <!-- Modal -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content beige-bg align-left">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="myModalLabel">Bli medlem av Protolab Vest</h4>
           </div>
-          <div>
-            <label>
-              CCV <input v-model="newCreditCard.cvc">
-            </label>
+
+          <div class="modal-body">
+
+              <div v-if="stripeCustomerInitialized">
+                <div>
+                  <label>
+                    Velg kort:
+                    <select v-model="newCharge.source">
+                      <option :value="null">Default payment method</option>
+                      <option v-for="(source, id) in sources" v-bind:value="source.id" v-if="source.id">
+                        {{ source.brand }} &hellip;{{ source.last4 }}
+                        (exp. {{ source.exp_month }}/{{ source.exp_year }})
+                      </option>
+                    </select>
+                  </label>
+                  <button>Forsett</button>
+                </div>
+                <h3>Mine kort</h3>
+                <ul>
+                  <li v-for="(source, id) in sources">
+                    <span v-if="source.id">
+                      {{ source.brand }} &hellip;{{ source.last4 }}
+                      (exp. {{ source.exp_month }}/{{ source.exp_year }})
+                    </span>
+                    <span v-else>&hellip;</span>
+                  </li>
+                </ul>
+                <div>
+                  <h4>Legg til nytt kort</h4>
+                  <div>
+                    <label>
+                      Number <input v-model="newCreditCard.number">
+                    </label>
+                  </div>
+                  <div>
+                    <label>
+                      CCV <input v-model="newCreditCard.cvc">
+                    </label>
+                  </div>
+                  <div>
+                    <label>
+                      Exp
+                      <input v-model="newCreditCard.exp_month" size="2"> /
+                      <input v-model="newCreditCard.exp_year" size="4">
+                    </label>
+                  </div>
+                  <div>
+                    <label>
+                      Zip <input v-model="newCreditCard.address_zip">
+                    </label>
+                  </div>
+                  <div>
+                    <button v-on:click="submitNewCreditCard">Add</button>
+                    {{ newCreditCard.error }}
+                  </div>
+                </div>
+
+              </div>
+              <div v-else>&hellip;</div>
+              <h3>Subscribe</h3>
+              <div>
+                <button v-on:click="submitNewSubscription">Bli medlem</button>
+                {{ newCharge.error }}
+              </div>
+
           </div>
-          <div>
-            <label>
-              Exp
-              <input v-model="newCreditCard.exp_month" size="2"> /
-              <input v-model="newCreditCard.exp_year" size="4">
-            </label>
-          </div>
-          <div>
-            <label>
-              Zip <input v-model="newCreditCard.address_zip">
-            </label>
-          </div>
-          <div>
-            <button v-on:click="submitNewCreditCard">Add</button>
-            {{ newCreditCard.error }}
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
           </div>
         </div>
-      </div>
-      <div v-else>&hellip;</div>
-      <h3>Subscribe</h3>
-      <div>
-        <label>
-          Card
-          <select v-model="newCharge.source">
-            <option :value="null">Default payment method</option>
-            <option v-for="(source, id) in sources" v-bind:value="source.id" v-if="source.id">
-              {{ source.brand }} &hellip;{{ source.last4 }}
-              (exp. {{ source.exp_month }}/{{ source.exp_year }})
-            </option>
-          </select>
-        </label>
-      </div>
-      <div>
-        <button v-on:click="submitNewSubscription">Subscribe</button>
-        {{ newCharge.error }}
-      </div>
-      <div>
-        <button v-on:click="unsubscribe">Unsubscribe</button>
-        {{ newCharge.error }}
+        </div>
       </div>
     </div>
     <nav class=container id="navigation">
@@ -92,12 +121,18 @@
 <script>
 var request = require('../node_modules/request');
 
+$('#myModal').on('shown.bs.modal', function () {
+  $('#myInput').focus()
+})
+
 var firebaseUI = new firebaseui.auth.AuthUI(firebase.auth());
 export default {
   name: 'app',
   data: function(){
     return {
     currentUser: null,
+    subscription: null,
+    thankyou: "Takk for at du var medlem. Vi håpar du kjem tilbake :)",
     sources: {},
     stripeCustomerInitialized: false,
     newCreditCard: {
@@ -119,8 +154,6 @@ export default {
   },
   mounted: function() {
     this.setActive()
-    Stripe.setPublishableKey('pk_test_DhbaltXpWcE22ulgVtP4JGBO');
-
 
     var firebaseAuthOptions = {
       callbacks: {
@@ -137,11 +170,20 @@ export default {
         document.getElementById('loader').style.display = 'none';
         this.currentUser = firebaseUser;
         this.listen();
+        firebase.database().ref(`/stripe_customers/${this.currentUser.uid}/subscriptions`).once('value', function(snapshot) {
+          snapshot.forEach(function(sub){
+            if (!sub.val().cancel_at_period_end) {
+              this.subscription = sub.val();
+            }
+          })
+        });
       } else {
         firebaseUI.start('#firebaseui-auth-container', firebaseAuthOptions);
         this.currentUser = null;
       }
     });
+
+
   },
   methods: {
     listen: function() {
@@ -196,29 +238,23 @@ export default {
       })
     },
     unsubscribe: function() {
-      let userKey = this.currentUser.uid;
-      firebase.database().ref(`/stripe_customers/${userKey}/subscriptions`).once('value', function(snapshot) {
-        snapshot.forEach(function(sub){
-          let subscription = sub.val();
-
-          if (!subscription.cancel_at_period_end) {
-            request.post('https://us-central1-protolabvest-f8252.cloudfunctions.net/unsubscribeCustomer',{
-              form: {
-                subKey: sub.key,
-                subId: subscription.id,
-                userId: userKey
-              },
-              json: true
-              }, function (error, response, body) {
-              console.log('error:', error); // Print the error if one occurred
-              console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
-              console.log('body:', body); // Print the HTML for the Google homepage.
-            });
-          } else {
-            console.log("Not cancelled");
-          }
-        })
-      });
+      console.log(this.currentUser.uid);
+      // if (!this.subscription.cancel_at_period_end) {
+      //   request.post('https://us-central1-protolabvest-f8252.cloudfunctions.net/unsubscribeCustomer',{
+      //     form: {
+      //       subKey: sub.key,
+      //       subId: subscription.id,
+      //       userId: this.currentUser.uid
+      //     },
+      //     json: true
+      //     }, function (error, response, body) {
+      //     console.log('error:', error); // Print the error if one occurred
+      //     console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
+      //     console.log('body:', body); // Print the HTML for the Google homepage.
+      //   });
+      // } else {
+      //   console.log("Not cancelled");
+      // }
     },
     signOut: function() {
       firebase.auth().signOut()
@@ -351,6 +387,11 @@ nav {
   padding-bottom: 20px;
 }
 
+.align-left {
+  text-align: left;
+  padding-left: 20px;
+}
+
 #navigation .nav-link {
   height: 100px;
   position: relative;
@@ -416,4 +457,5 @@ nav {
   width: 60%;
   padding: 20px ;
 }
+
 </style>
