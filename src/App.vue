@@ -8,7 +8,8 @@
       <button v-on:click="signOut">Sign out</button>
     <!-- Button trigger modal -->
     <div v-if="subscription">
-      <button v-on:click="unsubscribe" class="btn btn-primary btn-lg orange-bg">Meld meg ut</button>
+      <button id="unsubscribeBtn" v-on:click="unsubscribe" class="btn btn-primary btn-lg orange-bg">Meld meg ut</button>
+      <i id="spinnerIcon" class="fa fa-spinner fa-spin loader" style="font-size:24px"></i>
       {{ newCharge.error }}
     </div>
     <div v-else>
@@ -16,7 +17,6 @@
         Bli medlem!
       </button>
     </div>
-
 
     <!-- Modal -->
     <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
@@ -110,7 +110,6 @@
               </div>
               <div v-else>&hellip;</div>
 
-
           </div>
         </div>
         </div>
@@ -148,7 +147,7 @@ export default {
   data: function(){
     return {
     currentUser: null,
-    subscription: "null",
+    subscription: null,
     thankyou: "Takk for at du var medlem. Vi håpar du kjem tilbake :)",
     sources: {},
     stripeCustomerInitialized: false,
@@ -196,6 +195,7 @@ export default {
           snapshot.forEach(sub => {
             if (!sub.val().cancel_at_period_end) {
               this.subscription = sub.val();
+              this.subscription.key = sub.key;
             }
           })
         });
@@ -265,23 +265,26 @@ export default {
       })
     },
     unsubscribe: function() {
-      console.log(this.currentUser.uid);
-      // if (!this.subscription.cancel_at_period_end) {
-      //   request.post('https://us-central1-protolabvest-f8252.cloudfunctions.net/unsubscribeCustomer',{
-      //     form: {
-      //       subKey: sub.key,
-      //       subId: subscription.id,
-      //       userId: this.currentUser.uid
-      //     },
-      //     json: true
-      //     }, function (error, response, body) {
-      //     console.log('error:', error); // Print the error if one occurred
-      //     console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
-      //     console.log('body:', body); // Print the HTML for the Google homepage.
-      //   });
-      // } else {
-      //   console.log("Not cancelled");
-      // }
+      document.getElementById('spinnerIcon').style.display = 'block';
+      document.getElementById('unsubscribeBtn').style.display = 'none';
+      if (!this.subscription.cancel_at_period_end) {
+        request.post('https://us-central1-protolabvest-f8252.cloudfunctions.net/unsubscribeCustomer',{
+          form: {
+            subKey: this.subscription.key,
+            subId: this.subscription.id,
+            userId: this.currentUser.uid
+          },
+          json: true
+          }, function (error, response, body) {
+          console.log('error:', error); // Print the error if one occurred
+          console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
+          console.log('body:', body); // Print the HTML for the Google homepage.
+          document.getElementById('spinnerIcon').style.display = 'none';
+          document.getElementById('unsubscribeBtn').style.display = 'block';
+        });
+      } else {
+        console.log("Not cancelled");
+      }
     },
     signOut: function() {
       firebase.auth().signOut()
@@ -434,6 +437,11 @@ nav {
 .alert{
     display: none;
 }
+
+.loader {
+  display: none;
+}
+
 
 #navigation .nav-link {
   height: 100px;
