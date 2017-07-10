@@ -23,77 +23,94 @@
       <div class="modal-dialog" role="document">
         <div class="modal-content beige-bg align-left">
           <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
             <h4 class="modal-title" id="myModalLabel">Bli medlem av Protolab Vest</h4>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
           </div>
 
           <div class="modal-body">
 
               <div v-if="stripeCustomerInitialized">
-                <div>
-                  <label>
-                    Velg kort:
-                    <select v-model="newCharge.source">
-                      <option :value="null">Default payment method</option>
-                      <option v-for="(source, id) in sources" v-bind:value="source.id" v-if="source.id">
-                        {{ source.brand }} &hellip;{{ source.last4 }}
-                        (exp. {{ source.exp_month }}/{{ source.exp_year }})
-                      </option>
-                    </select>
-                  </label>
-                  <button>Forsett</button>
+                <div v-if="firstStep">
+                  <div>
+                    <label>
+                      Velg kort:
+                      <select class="form-control" v-model="newCharge.source">
+                        <option :value="null">Ingen kort valgt</option>
+                        <option v-for="(source, id) in sources" v-bind:value="source.id" v-if="source.id">
+                          {{ source.brand }} &hellip;{{ source.last4 }}
+                          (exp. {{ source.exp_month }}/{{ source.exp_year }})
+                        </option>
+                      </select>
+                    </label>
+                    <button id="fortsettBtn" class="btn btn-primary" v-on:click="toggleSteps" >Forsett</button>
+                    <div class="alert alert-danger alert-dismissable">
+                      <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                      Du må velge eit kort du ønsker å betale med.
+                    </div>
+                  </div>
+                  <br>
+                  <br>
+                  <div v-if="newCard">
+                    <h4>Legg til nytt kort</h4>
+                    <form>
+                      <div class="form-group">
+                        <label>
+                          Navn på kortholder <input class="form-control" v-model="newCreditCard.name">
+                        </label>
+                      </div>
+                      <div class="form-group">
+                        <label>
+                          Number <input class="form-control" v-model="newCreditCard.number">
+                        </label>
+                      </div>
+                      <div class="form-group">
+                        <div class="form-group row">
+                          <div class="col-md-4">
+                            <div class="">
+                              <label>
+                                CCV <input class="form-control" v-model="newCreditCard.cvc">
+                              </label>
+                            </div>
+                          </div>
+                          <div class="col-md-8">
+                            <div class="">
+                              <label>
+                                Exp
+                                <ul class="list-inline">
+                                  <li class="list-inline-item">
+                                    <input class="form-control" v-model="newCreditCard.exp_month" size="2">
+                                  </li>
+                                  <li class="list-inline-item"> / </li>
+                                  <li class="list-inline-item">
+                                    <input class="form-control" v-model="newCreditCard.exp_year" size="4">
+                                  </li>
+                                </ul>
+                              </label>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div>
+                        <button class="btn btn-default" v-on:click="submitNewCreditCard">Legg til kort</button>
+                        {{ newCreditCard.error }}
+                      </div>
+                    </form>
+                  </div>
+                  <div v-else>
+                    <button class="btn btn-default" v-on:click="toggleNewCard">Legg til nytt kort</button>
+                  </div>
                 </div>
-                <h3>Mine kort</h3>
-                <ul>
-                  <li v-for="(source, id) in sources">
-                    <span v-if="source.id">
-                      {{ source.brand }} &hellip;{{ source.last4 }}
-                      (exp. {{ source.exp_month }}/{{ source.exp_year }})
-                    </span>
-                    <span v-else>&hellip;</span>
-                  </li>
-                </ul>
-                <div>
-                  <h4>Legg til nytt kort</h4>
-                  <div>
-                    <label>
-                      Number <input v-model="newCreditCard.number">
-                    </label>
-                  </div>
-                  <div>
-                    <label>
-                      CCV <input v-model="newCreditCard.cvc">
-                    </label>
-                  </div>
-                  <div>
-                    <label>
-                      Exp
-                      <input v-model="newCreditCard.exp_month" size="2"> /
-                      <input v-model="newCreditCard.exp_year" size="4">
-                    </label>
-                  </div>
-                  <div>
-                    <label>
-                      Zip <input v-model="newCreditCard.address_zip">
-                    </label>
-                  </div>
-                  <div>
-                    <button v-on:click="submitNewCreditCard">Add</button>
-                    {{ newCreditCard.error }}
-                  </div>
+                <div v-else>
+                  <button class="btn btn-primary" v-on:click="toggleSteps">Tilbake</button>
+                  <h3>Subscribe</h3>
+                  <button class="btn btn-default" v-on:click="submitNewSubscription">Bli medlem</button>
+                  {{ newCharge.error }}
                 </div>
 
               </div>
               <div v-else>&hellip;</div>
-              <h3>Subscribe</h3>
-              <div>
-                <button v-on:click="submitNewSubscription">Bli medlem</button>
-                {{ newCharge.error }}
-              </div>
 
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+
           </div>
         </div>
         </div>
@@ -131,11 +148,12 @@ export default {
   data: function(){
     return {
     currentUser: null,
-    subscription: null,
+    subscription: "null",
     thankyou: "Takk for at du var medlem. Vi håpar du kjem tilbake :)",
     sources: {},
     stripeCustomerInitialized: false,
     newCreditCard: {
+      name: '',
       number: '4242424242424242',
       cvc: '111',
       exp_month: 1,
@@ -146,7 +164,9 @@ export default {
     newCharge: {
       source: null,
       amount: 2000
-    }
+    },
+    firstStep: true,
+    newCard: false
   }
   },
   ready: () => {
@@ -167,11 +187,13 @@ export default {
     };
     firebase.auth().onAuthStateChanged(firebaseUser => {
       if (firebaseUser) {
+        let subData = null;
         document.getElementById('loader').style.display = 'none';
         this.currentUser = firebaseUser;
         this.listen();
-        firebase.database().ref(`/stripe_customers/${this.currentUser.uid}/subscriptions`).once('value', function(snapshot) {
-          snapshot.forEach(function(sub){
+        firebase.database().ref(`/stripe_customers/${this.currentUser.uid}/subscriptions`).once('value', snapshot => {
+
+          snapshot.forEach(sub => {
             if (!sub.val().cancel_at_period_end) {
               this.subscription = sub.val();
             }
@@ -203,25 +225,30 @@ export default {
         this.charges = {};
       });
     },
-    submitNewCreditCard: function() {
+    submitNewCreditCard: function(e) {
+      e.preventDefault();
+
       Stripe.card.createToken({
         number: this.newCreditCard.number,
         cvc: this.newCreditCard.cvc,
         exp_month: this.newCreditCard.exp_month,
         exp_year: this.newCreditCard.exp_year,
-        address_zip: this.newCreditCard.address_zip
+        address_zip: this.newCreditCard.address_zip,
+        name: this.newCreditCard.name
       }, (status, response) => {
         if (response.error) {
           this.newCreditCard.error = response.error.message;
         } else {
           firebase.database().ref(`/stripe_customers/${this.currentUser.uid}/sources`).push({token: response.id}).then(() => {
             this.newCreditCard = {
+              name: '',
               number: '',
               cvc: '',
               exp_month: 1,
               exp_year: 2017,
               address_zip: ''
             };
+            this.newCard = !this.newCard;
           });
         }
       });
@@ -265,6 +292,18 @@ export default {
         let item = document.getElementById(path);
         item.className += " active bold";
       }, 50);
+    },
+    toggleSteps: function() {
+      console.log(this.newCharge.source);
+      if (this.newCharge.source) {
+        this.firstStep = !this.firstStep;
+      } else {
+        $('.alert').show()
+      }
+
+    },
+    toggleNewCard: function() {
+      this.newCard = !this.newCard;
     }
   }
 }
@@ -390,6 +429,10 @@ nav {
 .align-left {
   text-align: left;
   padding-left: 20px;
+}
+
+.alert{
+    display: none;
 }
 
 #navigation .nav-link {
