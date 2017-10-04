@@ -7,15 +7,23 @@
       <h2>Hello {{ currentUser.email }},</h2>
       <button v-on:click="signOut">Sign out</button>
     <!-- Button trigger modal -->
-    <div v-if="subscription">
+    <div v-if="dateRenew">
       <button id="unsubscribeBtn" v-on:click="unsubscribe" class="btn btn-primary btn-lg orange-bg">Meld meg ut</button>
       <i id="spinnerIcon" class="fa fa-spinner fa-spin loader" style="font-size:24px"></i>
       {{ newCharge.error }}
+      <h4>Ditt medlemskap blir fornya {{this.dateRenew.toDateString()}}</h4>
     </div>
     <div v-else>
-      <button type="button" class="btn btn-primary btn-lg orange-bg" data-toggle="modal" data-target="#myModal">
-        Bli medlem!
-      </button>
+      <div v-if="dateEnd">
+        <button id="unsubscribeBtn" v-on:click="reactivate" class="btn btn-primary btn-lg orange-bg">Aktiver abbonment</button>
+        <h4>Ditt medlemskap går ut {{this.dateEnd.toDateString()}} og blir ikkje fornya</h4>
+      </div>
+      <div v-else>
+        <button id="subscribeBtn" type="button" class="btn btn-primary btn-lg orange-bg" data-toggle="modal" data-target="#myModal">
+          Bli medlem!
+        </button>
+      </div>
+      <i id="spinnerIcon" class="fa fa-spinner fa-spin loader" style="font-size:24px"></i>
     </div>
 
     <!-- Modal -->
@@ -101,9 +109,10 @@
                   </div>
                 </div>
                 <div v-else>
-                  <button class="btn btn-primary" v-on:click="toggleSteps">Tilbake</button>
                   <h3>Subscribe</h3>
-                  <button class="btn btn-default" v-on:click="submitNewSubscription">Bli medlem</button>
+                  <button class="btn btn-primary" data-dismiss="modal" v-on:click="submitNewSubscription">Bli medlem</button>
+                  <br>
+                  <button class="btn btn-default" v-on:click="toggleSteps">Tilbake</button>
                   {{ newCharge.error }}
                 </div>
 
@@ -149,6 +158,8 @@ export default {
     currentUser: null,
     subscription: null,
     thankyou: "Takk for at du var medlem. Vi håpar du kjem tilbake :)",
+    dateRenew: 0,
+    dateEnd: 0,
     sources: {},
     stripeCustomerInitialized: false,
     newCreditCard: {
@@ -173,7 +184,7 @@ export default {
   },
   mounted: function() {
     this.setActive()
-
+    let thisDate = new Date();
     var firebaseAuthOptions = {
       callbacks: {
         signInSuccess: (currentUser, credential, redirectUrl) => { return false; },
@@ -191,11 +202,13 @@ export default {
         this.currentUser = firebaseUser;
         this.listen();
         firebase.database().ref(`/stripe_customers/${this.currentUser.uid}/subscriptions`).once('value', snapshot => {
-
           snapshot.forEach(sub => {
+            this.subscription = sub.val();
+            this.subscription.key = sub.key;
             if (!sub.val().cancel_at_period_end) {
-              this.subscription = sub.val();
-              this.subscription.key = sub.key;
+              this.dateRenew = new Date(sub.val().current_period_end*1000)
+            } else if (sub.val().current_period_end*1000 > thisDate.getTime()) {
+              this.dateEnd = new Date(sub.val().current_period_end*1000);
             }
           })
         });
@@ -260,9 +273,15 @@ export default {
       });
     },
     submitNewSubscription: function() {
+      document.getElementById('spinnerIcon').style.display = 'block';
+      document.getElementById('subscribeBtn').style.display = 'none';
       firebase.database().ref(`/stripe_customers/${this.currentUser.uid}/subscriptions`).push({
         source: this.newCharge.source
       })
+      setTimeout(function(){
+        location.reload();
+      }, 1000);
+
     },
     unsubscribe: function() {
       document.getElementById('spinnerIcon').style.display = 'block';
@@ -279,11 +298,31 @@ export default {
           console.log('error:', error); // Print the error if one occurred
           console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
           console.log('body:', body); // Print the HTML for the Google homepage.
-          document.getElementById('spinnerIcon').style.display = 'none';
-          document.getElementById('unsubscribeBtn').style.display = 'block';
+          location.reload();
         });
       } else {
         console.log("Not cancelled");
+      }
+    },
+    reactivate: function() {
+      document.getElementById('spinnerIcon').style.display = 'block';
+      document.getElementById('unsubscribeBtn').style.display = 'none';
+      if (this.subscription.cancel_at_period_end) {
+        request.post('https://us-central1-protolabvest-f8252.cloudfunctions.net/reactivateSubscription',{
+          form: {
+            subKey: this.subscription.key,
+            subId: this.subscription.id,
+            userId: this.currentUser.uid
+          },
+          json: true
+          }, function (error, response, body) {
+          console.log('error:', error); // Print the error if one occurred
+          console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
+          console.log('body:', body); // Print the HTML for the Google homepage.
+          //location.reload();
+        });
+      } else {
+        console.log("Not reactivated");
       }
     },
     signOut: function() {

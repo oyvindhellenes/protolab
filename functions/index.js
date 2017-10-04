@@ -106,8 +106,40 @@ exports.unsubscribeCustomer = functions.https.onRequest((req, res) => {
       });
   });
 
-
 });
+
+exports.reactivateSubscription = functions.https.onRequest((req, res) => {
+
+  cors(req, res, () => {
+
+    let db = admin.database();
+    let fbRef = db.ref(`/stripe_customers/${req.body.userId}/subscriptions/${req.body.subKey}`);
+
+    stripe.subscriptions.retrieve(req.body.subId, function(err, subscription){
+      console.log(subscription.id);
+      console.log(subscription.items.data[0].id);
+      stripe.subscriptions.update(req.body.subId, {
+        items: [{
+          id: subscription.items.data[0].id,
+          plan: "protolab-vest-subscription",
+        }],
+      }, function(err, confirmation) {
+        if (err) {
+          fbRef.child('error').set(userFacingMessage(err));
+          res.send(err);
+        } else {
+          fbRef.set(confirmation);
+          res.send(confirmation);
+        }
+      });
+
+    });
+
+
+
+
+  })
+})
 
 // When a user is created, register them with Stripe
 exports.createStripeCustomer = functions.auth.user().onCreate(event => {
