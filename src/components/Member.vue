@@ -5,6 +5,8 @@
       <h1 class="beige bold" id="title">Bli medlem i Sunnfjord Skaparhus</h1>
       <br/>
       <br/>
+      <div id="firebaseui-auth-container"></div>
+      <div id="loader">&hellip;</div>
       <div v-if="currentUser">
         <ul class="list-inline">
           <li class="list-inline-item"><img :src=currentUser.photoURL alt="" id="userPhoto"></li>
@@ -14,21 +16,28 @@
       <!-- Button trigger modal -->
       <div v-if="dateRenew">
         <button id="unsubscribeBtn" v-on:click="unsubscribe" class="btn btn-primary btn-lg orange-bg">Meld meg ut</button>
-        <i id="spinnerIcon" class="fa fa-spinner fa-spin loader" style="font-size:24px"></i>
+        <br/>
+        <br/>
+        <i id="spinnerIcon" class="fa fa-spinner fa-spin loader beige" style="font-size:24px"></i>
         {{ newCharge.error }}
-        <h4>Ditt medlemskap blir fornya {{this.dateRenew.toDateString()}}</h4>
+        <p class="beige">Ditt medlemskap blir fornya {{this.dateRenew.toDateString()}}</p>
       </div>
       <div v-else>
         <div v-if="dateEnd">
-          <button id="unsubscribeBtn" v-on:click="reactivate" class="btn btn-primary btn-lg orange-bg">Aktiver abbonment</button>
-          <h4>Ditt medlemskap går ut {{this.dateEnd.toDateString()}} og blir ikkje fornya</h4>
+          <button id="unsubscribeBtn" v-on:click="reactivate" class="btn btn-primary btn-lg orange-bg">Aktiver abonnement</button>
+          <i id="spinnerIcon" class="fa fa-spinner fa-spin loader beige" style="font-size:24px"></i>
+          <br/>
+          <br/>
+          <p class="beige">Ditt medlemskap går ut {{this.dateEnd.toDateString()}} og blir ikkje fornya</p>
         </div>
         <div v-else>
           <button id="subscribeBtn" type="button" class="btn btn-primary btn-lg orange-bg p" data-toggle="modal" data-target="#myModal">
             Bli medlem
           </button>
+          <br/>
+          <br/>
         </div>
-        <i id="spinnerIcon" class="fa fa-spinner fa-spin loader" style="font-size:24px"></i>
+
       </div>
 
       <!-- Modal -->
@@ -56,6 +65,7 @@
                         </select>
                       </label>
                       <button id="fortsettBtn" class="btn btn-primary orange-bg p" v-on:click="toggleSteps" >Forsett</button>
+                      <i id="spinnerIcon" class="fa fa-spinner fa-spin loader" style="font-size:24px"></i>
                       <div class="alert alert-danger alert-dismissable">
                         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
                         Du må velge eit kort du ønsker å betale med.
@@ -104,7 +114,7 @@
                           </div>
                         </div>
                         <div>
-                          <button class="btn btn-default orange-bg p beige" v-on:click="submitNewCreditCard">Legg til kort</button>
+                          <button id="addNewCardBtn" class="btn btn-default orange-bg p beige" v-on:click="submitNewCreditCard">Legg til kort</button>
                           {{ newCreditCard.error }}
                         </div>
                       </form>
@@ -114,6 +124,9 @@
                     </div>
                   </div>
                   <div v-else>
+                    Du er i ferd med å stadfeste medlemskap hjå Sunnfjord Skaparhus.
+                    Det betyr at vi vil belaste deg med 349kr kvar månad frå og med i dag.
+                    Du kan når som helst avslutte abonnomentet.
                     <br/>
                     <br/>
                     <ul class="list-inline">
@@ -132,11 +145,11 @@
           </div>
         </div>
       </div>
-      <div v-else>
-        <p class="beige">Logg inn for å bli medlem:</p>
-        <div id="firebaseui-auth-container"></div>
-        <div id="loader">&hellip;</div>
-      </div>
+      <p class="beige p">Medlemskap i Sunnfjord Skaparhus kostar 349kr i månaden.
+        Få å lese om kva medlemskap innebærer, gå til Makerspace. Ønskjer du å bli medlem må du først
+        logge inn med din google-konto og deretter fylle inn nødvending informasjon.
+        Du kan når som helst velge å avbryte abonnementet. Har du andre spørsmål så ikkje nøl med
+        å ta kontakt med Øyvind Hellenes på 94055843.</p>
   </div>
 </template>
 
@@ -192,6 +205,7 @@ export default {
       tosUrl: '/'
     };
     firebase.auth().onAuthStateChanged(firebaseUser => {
+
       if (firebaseUser) {
         let subData = null;
         document.getElementById('loader').style.display = 'none';
@@ -236,7 +250,9 @@ export default {
     },
     submitNewCreditCard: function(e) {
       e.preventDefault();
-
+      document.getElementById('spinnerIcon').style.display = 'inline-block';
+      document.getElementById('fortsettBtn').style.display = 'none';
+      this.newCard = !this.newCard;
       Stripe.card.createToken({
         number: this.newCreditCard.number,
         cvc: this.newCreditCard.cvc,
@@ -257,7 +273,11 @@ export default {
               exp_year: 2017,
               address_zip: ''
             };
-            this.newCard = !this.newCard;
+            setTimeout(function(){
+              document.getElementById('spinnerIcon').style.display = 'none';
+              document.getElementById('fortsettBtn').style.display = 'inline-block';
+            }, 3000);
+
           });
         }
       });
@@ -269,14 +289,12 @@ export default {
       });
     },
     submitNewSubscription: function() {
-      document.getElementById('spinnerIcon').style.display = 'block';
-      document.getElementById('subscribeBtn').style.display = 'none';
       firebase.database().ref(`/stripe_customers/${this.currentUser.uid}/subscriptions`).push({
         source: this.newCharge.source
       })
       setTimeout(function(){
         location.reload();
-      }, 1000);
+      }, 500);
 
     },
     unsubscribe: function() {
