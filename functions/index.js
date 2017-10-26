@@ -21,7 +21,7 @@ const functions = require('firebase-functions'),
 
 admin.initializeApp(functions.config().firebase);
 
-const stripe = require('stripe')('sk_test_0Zh0W0wHz1mwIrdljZ07s4d3'),
+const stripe = require('stripe')('sk_live_SDqa3PbrH6NeMds80poxnvnj'),
       currency = 'NOK';
 
 const cors = require('cors')({origin: true});
@@ -69,7 +69,7 @@ exports.subscribeCustomer = functions.database.ref('/stripe_customers/{userId}/s
     return snapshot.val();
   }).then(customer => {
     // Create a charge using the pushId as the idempotency key, protecting against double charges
-    const plan = "protolab-vest-subscription";
+    const plan = "sunnfjord-skaparhus";
     const idempotency_key = event.params.id;
     let subscribe = {customer, plan};
     return stripe.subscriptions.create(subscribe, {idempotency_key});
@@ -121,7 +121,7 @@ exports.reactivateSubscription = functions.https.onRequest((req, res) => {
       stripe.subscriptions.update(req.body.subId, {
         items: [{
           id: subscription.items.data[0].id,
-          plan: "protolab-vest-subscription",
+          plan: "sunnfjord-skaparhus",
         }],
       }, function(err, confirmation) {
         if (err) {
