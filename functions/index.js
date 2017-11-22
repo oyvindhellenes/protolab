@@ -21,7 +21,7 @@ const functions = require('firebase-functions'),
 
 admin.initializeApp(functions.config().firebase);
 
-const stripe = require('stripe')('sk_live_SDqa3PbrH6NeMds80poxnvnj'),
+const stripe = require('stripe')('sk_live_la0vS9lkuDjRUyv5SBr6mLPc'),
       currency = 'NOK';
 
 const cors = require('cors')({origin: true});

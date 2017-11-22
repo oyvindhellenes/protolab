@@ -1,8 +1,33 @@
 <template>
   <div>
-    <img src="../assets/logo.png" id="logo-cover">
+    <h4 class="beige p">Dette er heimstaden til Sunnfjord Skaparhus. Noregs nest største makerspace. Vi er lokalisert på det gamle skipsverftet i Førde</h4>
     <img src="../assets/cover.png" id="banner">
-    <h4 class="beige p">Dette er heimstaden til Protolab Vest. Sogn og Fjordane Makerspace</h4>
+    <h3 class="beige bold">Info</h3>
+    <img src="../assets/skaparhus8.jpg" id="banner">
+    <img src="../assets/skaparhus7.jpg" id="banner">
+    <h3 class="beige bold">Kva vi gjer</h3>
+    <img src="../assets/skaparhus2.jpg" id="banner">
+    <h4 class="beige p">Makerspace</h4>
+    <img src="../assets/skaparhus3.jpg" id="banner">
+    <h4 class="beige p">Reodorklubb</h4>
+    <img src="../assets/skaparhus4.jpg" id="banner">
+    <h4 class="beige p">Høgskule</h4>
+    <img src="../assets/skaparhus5.jpg" id="banner">
+    <h4 class="beige p">Ungdomskule</h4>
+    <img src="../assets/skaparhus6.jpg" id="banner">
+    <h4 class="beige p">Norsksenteret</h4>
+    <h4 class="beige p">United World College</h4>
+    <h3 class="beige bold">Kva vi har</h3>
+    <img src="../assets/maskin1.jpg" id="banner">
+    <img src="../assets/maskin2.jpg" id="banner">
+    <h4 class="beige p">Elektrolab</h4>
+    <img src="../assets/maskin3.jpg" id="banner">
+    <h4 class="beige p">Printer</h4>
+    <img src="../assets/maskin4.jpg" id="banner">
+    <h4 class="beige p">Treverkstad</h4>
+    <img src="../assets/maskin5.jpg" id="banner">
+    <h3 class="beige bold">Sponsorar</h3>
+    <img src="../assets/sponsorar.jpg" id="banner">
 
 
   </div>
@@ -24,15 +49,6 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-
-#banner {
-  width: 100%;
-  border-style: solid;
-  border-width: 5px;
-  border-color: #fef1cf;
-  border-radius: 10px;
-  margin-bottom: 30px;
-}
 
 #tennisball {
   width: 200px;

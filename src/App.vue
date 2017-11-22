@@ -1,17 +1,16 @@
 <template>
-  <div id="app" class="beige-bg">
-    <img src="./assets/cover-round.png" id="header-img">
-
-    <nav class=container id="navigation">
+  <div id="app">
+    <nav class="container" id="navigation">
+      <img src="./assets/cover3.png" id="header-img">
       <ul class="nav nav-tabs">
         <li class="nav-item nav-left" v-on:click="setActive">
-          <router-link to="/om" id="om" class="nav-link">Reodorklubben</router-link>
+          <router-link to="/heim" id="heim" class="nav-link">Skaparhuset</router-link>
         </li>
         <li class="nav-item" v-on:click="setActive">
-          <router-link to="/heim" id="heim" class="nav-link">Makerspace</router-link>
+          <router-link to="/reodorklubben" id="reodorklubben" class="nav-link">Reodorklubben</router-link>
         </li>
-        <li class="nav-item nav-right" v-on:click="setActive">
-          <router-link to="/info" id="info" class="nav-link">Cafè</router-link>
+        <li class="nav-item" v-on:click="setActive">
+          <router-link to="/cafe" id="cafe" class="nav-link">Cafè</router-link>
         </li>
         <li class="nav-item nav-right" v-on:click="setActive">
           <router-link to="/member" id="member" class="nav-link">Medlemside</router-link>
@@ -68,6 +67,7 @@ export default {
 
 body {
   margin: 0;
+  background-color: #EAE3D1;
 }
 
 h1, h2 {
@@ -84,7 +84,7 @@ li {
 }
 
 nav {
-    margin-top: 100px;
+    margin-top: 20px;
 }
 
 .container {
@@ -245,11 +245,21 @@ nav {
 
 #header-img {
   width: 100%;
-  padding: 20px;
+  padding-bottom: 20px;
 }
+
 #logo-cover {
   width: 60%;
   padding: 20px ;
+}
+
+#banner {
+  width: 100%;
+  border-style: solid;
+  border-width: 5px;
+  border-color: #fef1cf;
+  border-radius: 10px;
+  margin-bottom: 30px;
 }
 
 </style>

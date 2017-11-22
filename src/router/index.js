@@ -1,8 +1,8 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Home from '@/components/Home'
-import About from '@/components/About'
-import Info from '@/components/Info'
+import Cafe from '@/components/Cafe'
+import Reodor from '@/components/Reodor'
 import Member from '@/components/Member'
 
 Vue.use(Router)
@@ -16,14 +16,14 @@ export default new Router({
       component: Home
     },
     {
-      path: '/om',
-      name: 'About',
-      component: About
+      path: '/cafe',
+      name: 'Cafe',
+      component: Cafe
     },
     {
-      path: '/info',
-      name: 'Info',
-      component: Info
+      path: '/reodorklubben',
+      name: 'Reodor',
+      component: Reodor
     },
     {
       path: '/member',
