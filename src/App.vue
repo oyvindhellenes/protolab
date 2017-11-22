@@ -13,12 +13,19 @@
           <router-link to="/cafe" id="cafe" class="nav-link">Cafè</router-link>
         </li>
         <li class="nav-item nav-right" v-on:click="setActive">
-          <router-link to="/member" id="member" class="nav-link">Medlemside</router-link>
+          <router-link to="/medlem" id="medlem" class="nav-link">Medlemside</router-link>
         </li>
       </ul>
     </nav>
     <div class="home container dark-bg">
       <router-view></router-view>
+    </div>
+    <div class="footer container brown-bg">
+      <p class="orange bold">
+        <b class="dark bold">Epost </b> hellenes.91gmail.com &nbsp; &nbsp;
+        <b class="dark bold">Telefon </b> 94055843 (Øyvind Hellenes) &nbsp; &nbsp;
+        <b class="dark bold">Adresse </b> Øyrane 12, 6800 Førde
+      </p>
     </div>
   </div>
 </template>
@@ -95,8 +102,20 @@ nav {
 .home {
   border-width: 13px;
   border-style: solid;
+  border-radius: 5px;
   border-color:  #CE6A1B;
-  padding: 15px 10% 500px 10%;
+  padding: 15px 10% 50px 10%;
+
+}
+
+.footer {
+  border-width: 13px;
+  border-style: solid;
+  border-radius: 5px;
+  border-color:  #321700;
+  padding: 15px 10% 0px 10%;
+  margin-top: 30px;
+  margin-bottom: 30px;
 
 }
 
@@ -261,5 +280,6 @@ nav {
   border-radius: 10px;
   margin-bottom: 30px;
 }
+
 
 </style>

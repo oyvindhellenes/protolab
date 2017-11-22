@@ -3,7 +3,7 @@ import Router from 'vue-router'
 import Home from '@/components/Home'
 import Cafe from '@/components/Cafe'
 import Reodor from '@/components/Reodor'
-import Member from '@/components/Member'
+import Medlem from '@/components/Medlem'
 
 Vue.use(Router)
 
@@ -26,9 +26,9 @@ export default new Router({
       component: Reodor
     },
     {
-      path: '/member',
-      name: 'Member',
-      component: Member
+      path: '/medlem',
+      name: 'Medlem',
+      component: Medlem
     },
     {
       path: '*',

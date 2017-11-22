@@ -3,7 +3,7 @@
       <br/>
       <br/>
       <h1 class="beige bold" id="title">Bli medlem i Sunnfjord Skaparhus</h1>
-      <br/>
+      <img src="../assets/cover.png" id="banner">
       <br/>
       <div id="firebaseui-auth-container"></div>
       <div id="loader">&hellip;</div>
