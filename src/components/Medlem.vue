@@ -145,11 +145,12 @@
           </div>
         </div>
       </div>
-      <p class="beige p">Medlemskap i Sunnfjord Skaparhus kostar 349kr i månaden.
-        Få å lese om kva medlemskap innebærer, gå til Makerspace. Ønskjer du å bli medlem må du først
-        logge inn med din google-konto og deretter fylle inn nødvending informasjon.
-        Du kan når som helst velge å avbryte abonnementet. Har du andre spørsmål så ikkje nøl med
-        å ta kontakt med Øyvind Hellenes på 94055843.</p>
+      <p class="beige lead">Ønskjer du å bli medlem må du først logge inn med din google-konto og deretter
+        fylle inn nødvending informasjon. Medlemskap i Sunnfjord Skaparhus kostar 349kr i månaden.
+        Vi har gjort inn og utmeldingsprosessen så enkel som mogleg for at du skal sleppe å betale når du
+        ikkje brukar skaparhuset. Få å lese om kva medlemskap innebærer, gå til <a class="orange" href="/heim">Skaparhuset</a>.
+        Har du spørsmål om bedriftsavtale eller noko anna, ikkje nøl med å ta kontakt med Øyvind Hellenes på 94055843.</p>
+
   </div>
 </template>
 

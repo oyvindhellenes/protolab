@@ -162,6 +162,11 @@ nav {
   text-decoration: underline;
 }
 
+.lead {
+  text-align: left;
+  padding-bottom: 20px;
+}
+
 .p {
   font-family: 'Helvetica' !important;
   font-weight: lighter;
@@ -180,6 +185,10 @@ nav {
 
 .padding-top-bottom {
   padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+.padding-bottom {
   padding-bottom: 20px;
 }
 
