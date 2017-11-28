@@ -3,7 +3,7 @@
     <br>
     <h1 class="beige bold">Velkommen til Sunnfjord Skaparhus. Noregs nest største makerspace.</h1>
     <br>
-    <img src="../assets/skaparhus4.jpg" id="banner">
+    <img src="https://firebasestorage.googleapis.com/v0/b/protolabvest-f8252.appspot.com/o/skaparhus4.jpg?alt=media&token=625a55f8-1be2-49fa-89b9-bea8a4de86b1" id="banner">
     <p class="beige lead">
      Sunnfjord Skaparhus blei skipa Februar 2017. Sidan den gong har vi hatt ein jevn vekst med mest fokus på aktivitetar for barn og unge.
      No utvidar vi og satsar for fullt på vaksne også! Medlemskap kostar 349kr i månden. Du finn meir info om kva medlemskap innebærar
