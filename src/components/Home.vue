@@ -1,12 +1,12 @@
 <template>
   <div>
     <br>
-    <h2 class="beige bold">Dette er heimstaden til Sunnfjord Skaparhus. Noregs nest største makerspace. Velkommen!</h2>
+    <h1 class="beige bold">Velkommen til Sunnfjord Skaparhus. Noregs nest største makerspace.</h1>
     <br>
     <img src="../assets/skaparhus4.jpg" id="banner">
     <p class="beige lead">
-     Sunnfjord Skaparhus blei skipa Februar 2017. Sia den gong har vi hatt ein jevn vekst med mest fokus på aktivitetar for barn og unge.
-     No utvidar vi og satsar for fullt på vaksne også! Medlemskap kostar 349kr i månden. Du finn meir info om kva medlemskap innebærer
+     Sunnfjord Skaparhus blei skipa Februar 2017. Sidan den gong har vi hatt ein jevn vekst med mest fokus på aktivitetar for barn og unge.
+     No utvidar vi og satsar for fullt på vaksne også! Medlemskap kostar 349kr i månden. Du finn meir info om kva medlemskap innebærar
      under "Kva vi gjer" lenger nede. Det er også mogleg å få gunstige avtalar for skular og bedrifter.
     </p>
     <a class="btn btn-default beige-bg orange" href="/medlem">Bli medlem</a>
@@ -24,9 +24,12 @@
       likevel seiast at "makerspace" er eit dårleg norsk ord så difor vel vi å bruke "Skaparhus" i staden.
       Eit Skaparhus er definert som eit kreativt rom eller verkstad der folk kan samlast for å skape og lære.
       Vi gjer deg tilgang til eit hav av utstyr, maskiner og kunnskap slik at du kan utfolde deg kreativt og
-      treffe andre engasjerte mennesker.
+      treffe andre engasjerte menneske.
     </p>
     <img src="../assets/skaparhus3.jpg" id="banner">
+    <p class="beige lead">Har du eit prosjekt som du ønskjer å arbeide med ved sida av jobb, så er dette eit perfekt tilbod for deg.
+      Her har vi folk som jobbar med alt i frå programmering til møbelbygging.
+    </p>
     <h3 class="beige bold">Reodorklubben</h3>
     <p class="beige lead">
       Sunnfjord Skaparhus er vert for det som kanskje er den tøffaste skaparklubben i heile Noreg, nemleg Reodorklubben! Les meir om Reodorklubben <a class="orange" href="/reodorklubben">her.</a>
@@ -36,7 +39,7 @@
     <p class="beige lead">
       Skular er ein svært viktig del av Sunnfjord Skaparhus. Vi legg til rette for at alt i frå
       barneskular til høgskular skal kunne nytte fasilitetane våre. Dette er viktig for oss då vi meinar at praktisk
-      arbeid med teknolgi gjer barn og vaksne bedre rusta for å takle viktige jobbar i framtida.
+      arbeid med teknolgi gjer både barn og vaksne bedre rusta for å takle framtidas arbeidsplassar.
       Skular som vi i dag samarbeidar med inkluderar Høgskulen på Vestlandet, Halbrend og Førde Ungdomskule,
       Mo og Øyrane VGS, Norsksenteret og United World College.
     </p>
@@ -45,7 +48,7 @@
     <h3 class="beige bold">Kva vi har</h3>
     <p class="beige lead">
       Kunst, video, tre, metall, 3D printing, laser, data, elektronikk, tekstil, prototyping osv. Nesten uansett kva prosjekt du ønskjer å
-      jobbe med så har vi det utstyret du treng. Og om vi ikkje har det skal vi alltids prøve å skaffe det du treng.
+      jobbe med så har vi det utstyret du treng. Og om vi ikkje har det skal vi alltids prøve å skaffe det du treng. Her ser du eit utvalg av fasilitetane våre:
     </p>
     <h5 class="beige bold">Elektrolab</h5>
     <img src="../assets/skaparhus6.jpg" id="banner">

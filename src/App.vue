@@ -10,7 +10,7 @@
           <router-link to="/reodorklubben" id="reodorklubben" class="nav-link">Reodorklubben</router-link>
         </li>
         <li class="nav-item" v-on:click="setActive">
-          <router-link to="/cafe" id="cafe" class="nav-link">Cafè</router-link>
+          <router-link to="/cafe" id="cafe" class="nav-link">Kjem snart</router-link>
         </li>
         <li class="nav-item nav-right" v-on:click="setActive">
           <router-link to="/medlem" id="medlem" class="nav-link">Medlemside</router-link>
